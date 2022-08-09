@@ -1,5 +1,7 @@
 import socket
 import sys
+import threading
+from utils.cmd import execute
 
 class NC:
     def __init__(self, args, buffer=None):
@@ -9,13 +11,13 @@ class NC:
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
     def run(self):
-        if self.args.listen:
+        if self.args['listen']:
             self.listen()
         else:
             self.send()
 
     def send(self):
-        self.socket.connect((self.args.target, self.args.port))
+        self.socket.connect((self.args['target'], int(self.args['port'])))
         if self.buffer:
             self.socket.send(self.buffer)
 
@@ -42,7 +44,7 @@ class NC:
             sys.exit()
 
     def listen(self):
-        self.socket.bind((self.args.target, self.args.port))
+        self.socket.bind((self.args['target'], int(self.args['port'])))
         self.socket.listen(5)
 
         while True:
@@ -53,11 +55,11 @@ class NC:
             client_thread.start()
 
     def handle(self, client_socket):
-        if self.args.execute:
-            output = execute(self.args.execute)
+        if self.args['execute']:
+            output = execute(self.args['execute'])
             client_socket.send(output.encode())
 
-        elif self.args.upload:
+        elif self.args['upload']:
             file_buffer = b''
 
             while True:
@@ -67,13 +69,13 @@ class NC:
                 else:
                     break
 
-            with open(self.args.upload) as f:
+            with open(self.args['upload']) as f:
                 f.write(file_buffer)
 
-                message = f'Saved file {self.args.upload}'
+                message = f"Saved file {self.args['upload']}"
                 client_socket.send(message.encode())
 
-        elif self.args.command:
+        elif self.args['command']:
             cmd_buffer = b''
 
             while True:
