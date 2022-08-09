@@ -1,0 +1,9 @@
+*.pyc
+*.pyo
+.env
+venv
+.venv
+.vscode
+*.swp
+build
+*.egg-info
