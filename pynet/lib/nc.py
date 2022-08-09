@@ -3,6 +3,9 @@ import sys
 import threading
 from pynet.utils.cmd import execute
 
+"""
+Small library to provide minimal Netcat-like functionality
+"""
 class NC:
     def __init__(self, args, buffer=None):
         self.args = args
@@ -17,7 +20,7 @@ class NC:
             self.send()
 
     def send(self):
-        self.socket.connect((self.args['target'], int(self.args['port'])))
+        self.socket.connect((self.args['target'], self.args['port']))
         if self.buffer:
             self.socket.send(self.buffer)
 
@@ -44,7 +47,7 @@ class NC:
             sys.exit()
 
     def listen(self):
-        self.socket.bind((self.args['target'], int(self.args['port'])))
+        self.socket.bind((self.args['target'], self.args['port']))
         self.socket.listen(5)
 
         while True:

@@ -2,8 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="pynet",
-    version="1.0",
-    summary="Python-based CLI network tools",
+    version="0.1.0",
     packages=find_packages(exclude=[]),
     install_requires=[
         "click",
