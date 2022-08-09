@@ -1,13 +1,13 @@
 import click
-from lib.nc import NC
+from pynet.lib.nc import NC
 import sys
 
 @click.command()
 @click.option("-h", "--host", required=False, default="0.0.0.0", help="Host URL - defaults to 0.0.0.0")
 @click.option("-p", "--port", required=True, help="Port number")
 @click.option("-l", "--listen", is_flag=True, help="Enable listen mode")
-@click.option("-e", "--execute", required=False, help="Command to execute")
-@click.option("-c", "--command", required=False, help="Command mode")
+@click.option("-e", "--execute", required=False, help="Command to execute, returns STDOUT on connection")
+@click.option("-c", "--command", required=False, help="Command to return to connection")
 @click.option("-u", "--upload", required=False, help="File to upload")
 @click.pass_obj
 def cli(options, host, port, listen, execute, command, upload):
@@ -16,7 +16,7 @@ def cli(options, host, port, listen, execute, command, upload):
     if options.debug:
         print(f"Host: {host}")
         print(f"Port: {port}")
-        print(f"Listen?: {listen}")
+        print(f"Listen mode?: {listen}")
         print(f"Exec: {exec}")
         print(f"Upload: {upload}")
 

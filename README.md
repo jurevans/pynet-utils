@@ -7,5 +7,5 @@ A collection of networking CLI tools built in Python.
 With `pip`:
 
 ```bash
-pip install
+pip install .
 ```

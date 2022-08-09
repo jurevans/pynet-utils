@@ -1,7 +1,7 @@
 import socket
 import sys
 import threading
-from utils.cmd import execute
+from pynet.utils.cmd import execute
 
 class NC:
     def __init__(self, args, buffer=None):
