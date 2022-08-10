@@ -6,7 +6,7 @@ import sys
 @click.argument('host', required=True, default="127.0.0.1")
 @click.option("-s", "--sniff", required=False, is_flag=True, help="Sniff provided IP address")
 @click.pass_obj
-def cli(obj, host, sniff):
+def cli(options, host, sniff):
     """
     Run IP commands
     """
@@ -14,7 +14,7 @@ def cli(obj, host, sniff):
         'host': host,
     }
 
-    if obj.debug:
+    if options.debug:
         click.echo(f'DEBUG ip:\nargs: {args}')
 
     scanner = Scanner(host)
