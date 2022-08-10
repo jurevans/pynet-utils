@@ -27,7 +27,7 @@ class PyNet(object):
     def __init__(self, debug=False):
         self.debug = debug
 
-@click.group(cls=CLI, help='This tool\s subcommands are loaded automatically')
+@click.group(cls=CLI, help='Enter a subcommand')
 @click.pass_context
 @click.option("-d", "--debug", is_flag=True, help="Debug mode")
 def cli(ctx, debug):
