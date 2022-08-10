@@ -1,5 +1,5 @@
 import click
-from pynet.lib.ip import IP
+from pynet.lib.scanner import Scanner
 import sys
 
 @click.command()
@@ -17,5 +17,7 @@ def cli(obj, host, sniff):
     if obj.debug:
         click.echo(f'DEBUG ip:\nargs: {args}')
 
+    scanner = Scanner(host)
+
     if sniff:
-        IP.sniff(host)
+        scanner.sniff()
