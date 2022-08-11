@@ -12,6 +12,7 @@ def cli(options, host, sniff):
     """
     args = {
         'host': host,
+        'sniff': sniff,
     }
 
     if options.debug:
