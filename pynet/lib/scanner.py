@@ -1,5 +1,4 @@
 import os
-import ipaddress
 import socket
 import sys
 from pynet.lib.ip import IP

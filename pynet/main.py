@@ -4,7 +4,7 @@ import os
 plugin_folder = os.path.join(os.path.dirname(__file__), 'commands')
 
 class CLI(click.MultiCommand):
-    def list_commands(self, ctx):
+    def list_commands(self, _):
         rv = []
         for filename in os.listdir(plugin_folder):
             if filename.startswith('__'):
@@ -15,7 +15,7 @@ class CLI(click.MultiCommand):
         rv.sort()
         return rv
 
-    def get_command(self, ctx, name):
+    def get_command(self, _, name):
         ns = {}
         fn = os.path.join(plugin_folder, name + '.py')
         with open(fn) as f:

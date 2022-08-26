@@ -1,7 +1,7 @@
 import shlex
 import subprocess
 
-def execute(cmd):
+def execute(cmd: str) -> str:
     cmd = cmd.strip()
     if not cmd:
         return

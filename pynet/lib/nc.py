@@ -7,21 +7,31 @@ from pynet.utils.cmd import execute
 Small library to provide minimal Netcat-like functionality
 """
 class NC:
-    def __init__(self, args, buffer=None):
+    def __init__(self, args, buffer=None, debug=False):
         self.args = args
         self.buffer = buffer
+        self.debug: bool = debug
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
     def run(self):
+        self.debug and print('NC.run()')
         if self.args['listen']:
             self.listen()
         else:
             self.send()
 
     def send(self):
-        self.socket.connect((self.args['target'], self.args['port']))
+        self.debug and print('NC.send()')
+        try:
+            self.socket.connect((self.args['host'], self.args['port']))
+        except Exception as e:
+            print(f"Failed to connect to host {self.args['host']} on port {self.args['port']}\n{e}")
+            sys.exit()
+
+        print(self.buffer)
         if self.buffer:
+            self.debug and print ('self.socket.send()')
             self.socket.send(self.buffer)
 
         try:
@@ -37,7 +47,7 @@ class NC:
 
                     if response:
                         print(response)
-                        buffer = input('> ')
+                        buffer = input('#> ')
                         buffer += '\n'
                         self.socket.send(buffer.encode())
 
@@ -47,7 +57,8 @@ class NC:
             sys.exit()
 
     def listen(self):
-        self.socket.bind((self.args['target'], self.args['port']))
+        self.debug and print('NC.listen()')
+        self.socket.bind((self.args['host'], self.args['port']))
         self.socket.listen(5)
 
         while True:

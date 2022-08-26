@@ -9,7 +9,7 @@ class UDP:
         self.verbose = args['verbose']
         self.sender = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-    def send(self):
+    def send(self) -> None:
         if self.subnet:
             try:
                 for ip in ipaddress.ip_network(self.subnet):
