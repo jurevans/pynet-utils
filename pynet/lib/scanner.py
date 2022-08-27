@@ -28,6 +28,7 @@ class Scanner:
                 raw_buffer = self.socket.recvfrom(65535)[0]
                 # create an IP header from the first 20 bytes
                 ip_header = IP(raw_buffer[0:20])
+
                 # print the detected protocol and hosts
                 print('Protocol: %s %s -> %s' % (ip_header.protocol,
                                                  ip_header.src_address,

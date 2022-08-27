@@ -14,14 +14,14 @@ class NC:
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
-    def run(self):
+    def run(self) -> None:
         self.debug and print('NC.run()')
         if self.args['listen']:
             self.listen()
         else:
             self.send()
 
-    def send(self):
+    def send(self) -> None:
         self.debug and print('NC.send()')
         try:
             self.socket.connect((self.args['host'], self.args['port']))
@@ -56,7 +56,7 @@ class NC:
             self.socket.close()
             sys.exit()
 
-    def listen(self):
+    def listen(self) -> None:
         self.debug and print('NC.listen()')
         self.socket.bind((self.args['host'], self.args['port']))
         self.socket.listen(5)
@@ -68,7 +68,7 @@ class NC:
             )
             client_thread.start()
 
-    def handle(self, client_socket):
+    def handle(self, client_socket) -> None:
         if self.args['execute']:
             output = execute(self.args['execute'])
             client_socket.send(output.encode())
