@@ -3,13 +3,27 @@ import struct
 
 PROTOCOL_MAP = {1: "ICMP", 6: "TCP", 17: "UDP"}
 
-class IP:
-    __slots__ = ('ver', 'ihl', 'tos', 'len', 'id', 'offset',
-                 'ttl', 'protocol_num', 'sum', 'src', 'dst',
-                 'src_address', 'dst_address', 'protocol')
 
-    def __init__(self, buff=None):
-        header = struct.unpack('<BBHHHBBH4s4s', buff)
+class IP:
+    __slots__ = (
+        "ver",
+        "ihl",
+        "tos",
+        "len",
+        "id",
+        "offset",
+        "ttl",
+        "protocol_num",
+        "sum",
+        "src",
+        "dst",
+        "src_address",
+        "dst_address",
+        "protocol",
+    )
+
+    def __init__(self, buff):
+        header = struct.unpack("<BBHHHBBH4s4s", buff)
         self.ver = header[0] >> 4
         self.ihl = header[0] & 0xF
 
@@ -29,4 +43,4 @@ class IP:
         try:
             self.protocol: str = PROTOCOL_MAP[self.protocol_num]
         except Exception as e:
-            print('%s No protocol for %s' % e, self.protocol_num)
+            print("%s No protocol for %s" % e, self.protocol_num)

@@ -1,11 +1,14 @@
 import socket
 import sys
 import threading
+
 from pynet.utils.cmd import execute
 
 """
 Small library to provide minimal Netcat-like functionality
 """
+
+
 class NC:
     def __init__(self, args, buffer=None, debug=False):
         self.args = args
@@ -15,29 +18,34 @@ class NC:
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
     def run(self) -> None:
-        self.debug and print('NC.run()')
-        if self.args['listen']:
+        if self.debug:
+            print("NC.run()")
+        if self.args["listen"]:
             self.listen()
         else:
             self.send()
 
     def send(self) -> None:
-        self.debug and print('NC.send()')
+        if self.debug:
+            print("NC.send()")
         try:
-            self.socket.connect((self.args['host'], self.args['port']))
+            self.socket.connect((self.args["host"], self.args["port"]))
         except Exception as e:
-            print(f"Failed to connect to host {self.args['host']} on port {self.args['port']}\n{e}")
+            print(
+                f"Failed to connect to host {self.args['host']} on port {self.args['port']}\n{e}"
+            )
             sys.exit()
 
         print(self.buffer)
         if self.buffer:
-            self.debug and print ('self.socket.send()')
+            if self.debug:
+                print("self.socket.send()")
             self.socket.send(self.buffer)
 
         try:
             while True:
                 recv_len = 1
-                response = ''
+                response = ""
                 while recv_len:
                     data = self.socket.recv(4096)
                     recv_len = len(data)
@@ -47,34 +55,34 @@ class NC:
 
                     if response:
                         print(response)
-                        buffer = input('#> ')
-                        buffer += '\n'
+                        buffer = input("#> ")
+                        buffer += "\n"
                         self.socket.send(buffer.encode())
 
         except KeyboardInterrupt:
-            print('User terminated.')
+            print("User terminated.")
             self.socket.close()
             sys.exit()
 
     def listen(self) -> None:
-        self.debug and print('NC.listen()')
-        self.socket.bind((self.args['host'], self.args['port']))
+        if self.debug:
+            print("NC.listen()")
+        self.socket.bind((self.args["host"], self.args["port"]))
         self.socket.listen(5)
 
         while True:
             client_socket, _ = self.socket.accept()
-            client_thread = threading.Thread(
-                target=self.handle, args=(client_socket,)
-            )
+            client_thread = threading.Thread(target=self.handle, args=(client_socket,))
             client_thread.start()
 
     def handle(self, client_socket) -> None:
-        if self.args['execute']:
-            output = execute(self.args['execute'])
-            client_socket.send(output.encode())
+        if self.args["execute"]:
+            output = execute(self.args["execute"])
+            if output != None:
+                client_socket.send(output.encode())
 
-        elif self.args['upload']:
-            file_buffer = b''
+        elif self.args["upload"]:
+            file_buffer = b""
 
             while True:
                 data = client_socket.recv(4096)
@@ -83,25 +91,25 @@ class NC:
                 else:
                     break
 
-            with open(self.args['upload']) as f:
-                f.write(file_buffer)
+            with open(self.args["upload"]) as f:
+                f.write(str(file_buffer))
 
                 message = f"Saved file {self.args['upload']}"
                 client_socket.send(message.encode())
 
-        elif self.args['command']:
-            cmd_buffer = b''
+        elif self.args["command"]:
+            cmd_buffer = b""
 
             while True:
                 try:
-                    client_socket.send(b'#> ')
-                    while '\n' not in cmd_buffer.decode():
+                    client_socket.send(b"#> ")
+                    while "\n" not in cmd_buffer.decode():
                         cmd_buffer += client_socket.recv(64)
                     response = execute(cmd_buffer.decode())
                     if response:
                         client_socket.send(response.encode())
-                    cmd_buffer = b''
+                    cmd_buffer = b""
                 except Exception as e:
-                    print(f'Server killed! {e}')
+                    print(f"Server killed! {e}")
                     self.socket.close()
                     sys.exit()

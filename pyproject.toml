@@ -1,0 +1,7 @@
+[tool.basedpyright]
+
+typeCheckingMode = "off"
+reportMissingImports = "error"
+reportMissingTypeStubs = false
+reportAttributeAccessIssue = false
+reportAssignmentType = false
